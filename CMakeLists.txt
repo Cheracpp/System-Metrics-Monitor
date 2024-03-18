@@ -28,7 +28,7 @@ project(System_Metrics_Monitor
         LANGUAGES CXX
         VERSION 1.0.0
 )
-add_executable(System_Metrics_Monitor src/main.cpp src/monitor/cpumonitor.cpp src/monitor/cpumonitor.h src/monitor/memorymonitor.cpp src/monitor/memorymonitor.h src/monitor/diskmonitor.cpp src/monitor/diskmonitor.h src/ui/terminalui.cpp src/ui/terminalui.h src/monitor/process.cpp src/monitor/process.h src/monitor/processmonitor.cpp src/monitor/processmonitor.h)
+add_executable(System_Metrics_Monitor src/main.cpp src/monitor/cpu_monitor.cpp src/monitor/cpu_monitor.h src/monitor/memory_monitor.cpp src/monitor/memory_monitor.h src/monitor/disk_monitor.cpp src/monitor/disk_monitor.h src/ui/terminal_ui.cpp src/ui/terminal_ui.h src/monitor/process.cpp src/monitor/process.h src/monitor/process_monitor.cpp src/monitor/process_monitor.h)
 
 
 target_include_directories(System_Metrics_Monitor PRIVATE src)
