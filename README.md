@@ -1,13 +1,4 @@
 # System Metrics Monitor
-<!--toc:start-->
-- [System Metrics Monitor](#system-metrics-monitor)
-  - [Introduction](#introduction)
-  - [Feature Checklist](#feature-checklist)
-    - [Current Features](#current-features)
-    - [Planned Features](#planned-features)
-  - [Prerequisites](#prerequisites)
-  - [Installation Instructions](#installation-instructions)
-<!--toc:end-->
 
 ## Introduction
 
