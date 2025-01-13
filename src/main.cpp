@@ -1,8 +1,10 @@
-#include "ui/terminal_ui.h"
-#include "monitor/cpu_monitor.h"
+#include "ui/main_component.h"
+
+static void TestingFileInput() {}
 
 int main() {
-  TerminalUI ui;
-  ui.Display();
+  auto screen = ftxui::ScreenInteractive::Fullscreen();
+  ftxui::Component main_component = Make<MainComponent>(&screen);
+  screen.Loop(main_component);
   return 0;
 }

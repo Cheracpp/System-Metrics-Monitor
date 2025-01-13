@@ -1,36 +1,90 @@
-//
-// Created by Aymane on 7/26/2023.
-//
 #include "process_monitor.h"
+#include "process_worker.h"
 
-#include <dirent.h>
-#include <cstring>
+#include <filesystem>
 #include <iostream>
 #include <string>
+#include <unordered_set>
 #include <vector>
-#include <algorithm>
 
-std::vector<int> ProcessMonitor::GetProcessList() const {
-  std::vector<int> process_list;
-  DIR* proc_dir = opendir("/proc");
-  if (proc_dir == nullptr) {
-    std::cerr << "Failed to open /proc directory: " << std::strerror(errno) << std::endl;
-    return process_list;  // Return empty list on failure.
+ProcessMonitor::ProcessMonitor(ftxui::ScreenInteractive *screen)
+    : stop_thread_(false) {
+  screen_ = screen;
+  processes_monitor_thread_ =
+      std::thread(&ProcessMonitor::UpdateProcessesInformation, this);
+}
+
+ProcessMonitor::~ProcessMonitor() {
+  stop_thread_ = true;
+  if (processes_monitor_thread_.joinable()) {
+    processes_monitor_thread_.join();
   }
+}
 
-  struct dirent* entry;
-  while ((entry = readdir(proc_dir)) != nullptr) {
-    if (entry->d_type == DT_DIR) {
-      std::string name = entry->d_name;
-      if (std::all_of(name.begin(), name.end(), ::isdigit)) {
-        process_list.push_back(std::stoi(name));
-      }
+std::vector<Process> ProcessMonitor::GetProcessesInformation() {
+  std::lock_guard<std::mutex> lock(processes_information_mutex_);
+  return processes_information_;
+}
+
+void ProcessMonitor::UpdateProcessesInformation() {
+  while (!stop_thread_) {
+    try {
+      std::vector<Process> new_processes_information = GetProcessInformation();
+      std::lock_guard<std::mutex> lock(processes_information_mutex_);
+      processes_information_ = new_processes_information;
+    } catch (const std::runtime_error &e) {
+      std::cerr << "Failed to get CPU times: " << e.what() << '\n';
+    }
+    RefreshScreen();
+    std::this_thread::sleep_for(std::chrono::milliseconds(kSleepDurationMs));
+  }
+}
+
+std::vector<Process> ProcessMonitor::GetProcessInformation() {
+  std::vector<Process> process_information;
+  auto process_set = GetProcessList();
+  process_information.reserve(process_set.size());
+
+  for (auto it = previous_cpu_data_.begin(); it != previous_cpu_data_.end();) {
+    if (!process_set.contains(it->first)) {
+      it = previous_cpu_data_.erase(it);
+    } else {
+      ++it;
     }
   }
 
-  if (closedir(proc_dir) != 0) {
-    std::cerr << "Failed to close /proc directory: " << std::strerror(errno) << std::endl;
-  }
+  ProcessWorker::CalculateTotalSystemTicks();
 
-  return process_list;
+  for (int process_id : process_set) {
+    Process process = ProcessWorker::FetchProcessData(process_id);
+
+    if (!previous_cpu_data_.contains(process_id)) {
+      previous_cpu_data_[process_id] = {.prev_utime = 0,
+                                        .prev_stime = 0,
+                                        .prev_total_ticks = 0,
+                                        .cpu_percentage = 0.0};
+    }
+
+    ProcessWorker::CalculateCpuUsage(process, previous_cpu_data_[process.id]);
+
+    process_information.push_back(std::move(process));
+  }
+  return process_information;
+}
+
+std::unordered_set<int> ProcessMonitor::GetProcessList() {
+  std::unordered_set<int> process_set;
+  for (auto const &entry : std::filesystem::directory_iterator("/proc")) {
+    if (entry.is_directory()) {
+      std::string name = entry.path().filename().string();
+      if (std::all_of(name.begin(), name.end(), ::isdigit)) {
+        process_set.insert(std::stoi(name));
+      }
+    }
+  }
+  return process_set;
+}
+
+void ProcessMonitor::RefreshScreen() {
+  screen_->PostEvent(ftxui::Event::Custom);
 }

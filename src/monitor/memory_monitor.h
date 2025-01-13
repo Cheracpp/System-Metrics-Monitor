@@ -1,32 +1,28 @@
-//
-// Created by Aymane on 7/10/2023.
-//
+#ifndef ACCEPTANCE_PROJECT_MEMORY_MONITOR_H_
+#define ACCEPTANCE_PROJECT_MEMORY_MONITOR_H_
 
-#ifndef ACCEPTANCE_PROJECT_MEMORYMONITOR_H
-#define ACCEPTANCE_PROJECT_MEMORYMONITOR_H
-
-#include <string>
-#include <vector>
 #include <mutex>
+#include <string>
 #include <thread>
+#include <vector>
 
 class MemoryMonitor {
- public:
+public:
   MemoryMonitor();
   ~MemoryMonitor();
 
-  std::vector<std::string> GetMemUsage();
+  std::vector<std::pair<double, double>> GetMemUsage();
 
- private:
+private:
   std::thread mem_monitor_thread_;
   bool stop_thread_;
   std::mutex mem_usage_mutex_;
-  std::vector<std::string> mem_usages_;
+  std::vector<std::pair<double, double>> mem_usages_;
 
   void UpdateMemUsage();
 
-  static std::vector<std::string> GetRawMemData();
-  static void Trim(std::string& str);
+  static std::vector<std::pair<double, double>> GetRawMemData();
+  static void Trim(std::string &str);
 };
 
-#endif  // ACCEPTANCE_PROJECT_MEMORYMONITOR_H
+#endif // ACCEPTANCE_PROJECT_MEMORY_MONITOR_H_

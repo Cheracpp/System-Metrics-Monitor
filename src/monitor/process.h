@@ -1,16 +1,28 @@
-//
-// Created by Aymane on 7/26/2023.
-//
-
-#ifndef ACCEPTANCE_PROJECT_PROCESS_H
-#define ACCEPTANCE_PROJECT_PROCESS_H
+#ifndef SYSTEM_METRICS_MONITOR_SRC_MONITOR_PROCESS_H_
+#define SYSTEM_METRICS_MONITOR_SRC_MONITOR_PROCESS_H_
 
 #include <string>
 
-class Process {
- public:
-  // Returns the username associated with the given process ID.
-  static std::string UserName(int pid);
+struct Process {
+  int id;
+  std::string user;
+  int priority;
+  int nice_value;
+  long virtual_memory_byte;
+  long resident_memory_byte;
+  long shared_memory_byte;
+  std::string state;
+  double cpu_usage_percentage = 0.0;
+  double memory_usage_percentage;
+  double total_cpu_time_used_seconds;
+  std::string command_name;
 };
 
-#endif  // ACCEPTANCE_PROJECT_PROCESS_H
+struct CpuUsageData {
+  unsigned long prev_utime = 0;
+  unsigned long prev_stime = 0;
+  unsigned long prev_total_ticks = 0;
+  double cpu_percentage = 0.0;
+};
+
+#endif // SYSTEM_METRICS_MONITOR_SRC_MONITOR_PROCESS_H_

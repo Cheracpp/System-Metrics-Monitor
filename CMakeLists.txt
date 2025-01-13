@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required(VERSION 3.0)
 
 # --- Fetch FTXUI --------------------------------------------------------------
 include(FetchContent)
@@ -13,14 +13,14 @@ FetchContent_Declare(ftxui
 )
 
 FetchContent_GetProperties(ftxui)
-if(NOT ftxui_POPULATED)
+if (NOT ftxui_POPULATED)
     FetchContent_Populate(ftxui)
     add_subdirectory(
             ${ftxui_SOURCE_DIR}
             ${ftxui_BINARY_DIR}
             EXCLUDE_FROM_ALL
     )
-endif()
+endif ()
 
 # --- Build --------------------------------------------------------------------
 
@@ -28,7 +28,14 @@ project(System_Metrics_Monitor
         LANGUAGES CXX
         VERSION 1.0.0
 )
-add_executable(System_Metrics_Monitor src/main.cpp src/monitor/cpu_monitor.cpp src/monitor/cpu_monitor.h src/monitor/memory_monitor.cpp src/monitor/memory_monitor.h src/monitor/disk_monitor.cpp src/monitor/disk_monitor.h src/ui/terminal_ui.cpp src/ui/terminal_ui.h src/monitor/process.cpp src/monitor/process.h src/monitor/process_monitor.cpp src/monitor/process_monitor.h)
+add_executable(System_Metrics_Monitor src/main.cpp src/monitor/cpu_monitor.cpp src/monitor/cpu_monitor.h src/monitor/memory_monitor.cpp src/monitor/memory_monitor.h src/monitor/disk_monitor.cpp src/monitor/disk_monitor.h src/ui/main_component.cpp src/ui/main_component.h src/monitor/process_worker.cpp src/monitor/process_worker.h src/monitor/process_monitor.cpp src/monitor/process_monitor.h
+        src/monitor/process.h
+        src/ui/process_info_component.cpp
+        src/ui/process_info_component.h
+        src/ui/cpu_component.h
+        src/ui/cpu_component.cpp
+      src/ui/memory_component.h
+      src/ui/memory_component.cpp)
 
 
 target_include_directories(System_Metrics_Monitor PRIVATE src)

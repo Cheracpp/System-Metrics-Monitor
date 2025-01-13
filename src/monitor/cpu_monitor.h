@@ -12,13 +12,13 @@ class CpuMonitor {
   CpuMonitor();
   ~CpuMonitor();
 
-  const std::vector<std::string>& GetCpuUsages();
+  const std::vector<double> &GetCpuUsages();
 
  private:
   std::thread cpu_monitor_thread_;
-  std::atomic<bool> stop_thread_{false};
+  std::atomic<bool> stop_thread_;
   std::mutex cpu_usage_mutex_;
-  std::vector<std::string> cpu_usages_;
+  std::vector<double> cpu_usages_;
 
   static constexpr long kIdleTimeIndex = 3;
   static constexpr long kIOWaitTimeIndex = 4;
@@ -26,10 +26,11 @@ class CpuMonitor {
 
   void UpdateCpuUsage();
 
-  static std::vector<std::string> GetAllCpuUsages();
+  static std::vector<double> GetAllCpuUsages();
   static unsigned int GetNumberOfProcessors();
-  static std::vector<long> GetCpuTimes(const std::string& cpu_id);
-  static double CalculateCpuUsage(const std::vector<long>& times_start, const std::vector<long>& times_end);
+  static std::vector<long> GetCpuTimes(const std::string &cpu_id);
+  static double CalculateCpuUsage(const std::vector<long> &times_start,
+                                  const std::vector<long> &times_end);
   static std::string FormatCpuUsage(unsigned int cpu_num, double usage);
 };
 
