@@ -13,7 +13,7 @@
 
 System Metrics Monitor is a text-based user interface (TUI) application that collects and displays system metrics in real time. It's designed to monitor the performance of a Linux system, offering functionality similar to `htop`. The application is developed in C++ and leverages the FTXUI library to create the TUI.
 
-![app view](images/screenshot.png)
+![app view](images/Screenshot.png)
 
 ## Feature Checklist
 
