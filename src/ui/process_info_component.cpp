@@ -49,8 +49,9 @@ ftxui::Element ProcessInfoComponent::Render() {
 
   // table creation
   std::vector<ftxui::Elements> processed_data;
+  processed_data.reserve(processes.size());
   for (auto &process : processes) {
-    processed_data.push_back(
+    processed_data.emplace_back(
         FormatProcessData(process)); // inserting formatted processes data
   }
 
@@ -81,6 +82,7 @@ ftxui::Element ProcessInfoComponent::Render() {
   };
 
   std::vector<ftxui::Element> data_rows;
+  data_rows.reserve(processed_data.size());
   for (int r_idx = 0; r_idx < (int)processed_data.size(); r_idx++) {
     std::vector<ftxui::Element> row;
     for (int c_idx = 0; c_idx < kColumnCount; c_idx++) {
@@ -92,7 +94,7 @@ ftxui::Element ProcessInfoComponent::Render() {
       row_box = std::move(row_box) | ftxui::color(ftxui::Color::Black) |
                 ftxui::bgcolor(ftxui::Color::CadetBlue);
     }
-    data_rows.push_back(std::move(row_box));
+    data_rows.emplace_back(std::move(row_box));
   }
 
   std::string order_icon =
@@ -147,7 +149,7 @@ bool ProcessInfoComponent::OnEvent(ftxui::Event event) {
     return true;
   }
 
-  // precision modification
+  // MEM% and CPU% precision modification
   if (event == ftxui::Event::Character('p') && percentage_precision_ > 0) {
     percentage_precision_--;
     return true;
