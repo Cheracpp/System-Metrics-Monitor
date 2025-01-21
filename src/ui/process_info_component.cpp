@@ -57,16 +57,10 @@ ftxui::Element ProcessInfoComponent::Render() {
 
   // Compute the size of each cell
   for (auto &process_data : processed_data) {
-    for (auto &data : process_data) {
-      data->ComputeRequirement();
-    }
-  }
-
-  // get the max width of each column
-  for (int c_idx = 0; c_idx < kColumnCount; ++c_idx) {
-    for (int r_idx = 0; r_idx < (int)processed_data.size(); ++r_idx) {
-      c_width_[c_idx] = std::max(
-          c_width_[c_idx], processed_data[r_idx][c_idx]->requirement().min_x);
+    for (int c_idx = 0; c_idx < kColumnCount; ++c_idx) {
+      auto &element = process_data[c_idx];
+      element->ComputeRequirement();
+      c_width_[c_idx] = std::max(c_width_[c_idx], element->requirement().min_x);
     }
   }
 
@@ -114,9 +108,10 @@ ftxui::Element ProcessInfoComponent::Render() {
       ftxui::focusPositionRelative(slider_x_, slider_y_) | ftxui::xframe;
 
   // add slider for vertical mouvement
-  slider_y_ =
-      static_cast<float>(selected_row_) /
-      static_cast<float>(process_monitor_.GetProcessesInformation().size());
+
+  slider_y_ = processes.empty()
+                  ? 0.0f
+                  : static_cast<float>(selected_row_) / processes.size();
 
   auto body = vbox(std::move(data_rows)) |
               ftxui::focusPositionRelative(slider_x_, slider_y_) | ftxui::frame;
