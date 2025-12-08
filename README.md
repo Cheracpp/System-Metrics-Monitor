@@ -33,7 +33,7 @@ Ensure these are installed on your system before proceeding with the installatio
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/Cheracpp/System_Metrics_Monitor.git
+   git clone https://github.com/Cheracpp/System-Metrics-Monitor.git
 
 2. **Build the project:**
 
@@ -49,3 +49,4 @@ Ensure these are installed on your system before proceeding with the installatio
     ```bash
     ./system_metrics_monitor
     ```
+
