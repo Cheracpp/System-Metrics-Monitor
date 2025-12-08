@@ -50,8 +50,7 @@ void ProcessWorker::GetProcessUsername(Process &process) {
   if (pw && pw->pw_name) {
     process.user = pw->pw_name;
   } else {
-    std::cerr << "Error getting username from UID - " << std::strerror(errno)
-              << std::endl;
+    process.user = uid; // Fallback to UID if username not found
   }
 }
 // nice value + priority + CPU% + Time
