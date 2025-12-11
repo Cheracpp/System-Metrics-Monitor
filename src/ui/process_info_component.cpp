@@ -107,14 +107,14 @@ ftxui::Element ProcessInfoComponent::Render() {
       ftxui::bgcolor(ftxui::Color::LightPink1) |
       ftxui::focusPositionRelative(slider_x_, slider_y_) | ftxui::xframe;
 
-  // add slider for vertical mouvement
+  // add slider for vertical movement
 
   slider_y_ = processes.empty()
                   ? 0.0f
                   : static_cast<float>(selected_row_) / processes.size();
 
   auto body = vbox(std::move(data_rows)) |
-              ftxui::focusPositionRelative(slider_x_, slider_y_) | ftxui::frame;
+              ftxui::focusPositionRelative(slider_x_, slider_y_) | ftxui::frame | ftxui::flex;
 
   return vbox(header, body);
 }
