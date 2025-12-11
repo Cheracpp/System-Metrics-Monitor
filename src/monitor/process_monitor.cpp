@@ -67,6 +67,10 @@ std::vector<Process> ProcessMonitor::GetProcessInformation() {
 
     ProcessWorker::CalculateCpuUsage(process, previous_cpu_data_[process.id]);
 
+    // ignore processes with empty command names
+    if (process.command_name.empty() || process.command_name.find_first_not_of(" \t\n\v\f\r") == std::string::npos) {
+      continue;
+    }
     process_information.push_back(std::move(process));
   }
   return process_information;
