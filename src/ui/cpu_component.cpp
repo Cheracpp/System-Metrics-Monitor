@@ -64,7 +64,6 @@ ftxui::Element CpuComponent::Render() {
       filler(),
       overall_cpu,
       render_cpu_bars(number_of_rows_) | flex_grow,
-
       filler(),
   });
 }
@@ -77,5 +76,5 @@ bool CpuComponent::OnEvent(ftxui::Event event) {
     number_of_rows_--;
     return true;
   }
-  return ftxui::ComponentBase::OnEvent(event);
+  return ComponentBase::OnEvent(event);
 }

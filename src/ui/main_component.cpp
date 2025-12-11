@@ -7,7 +7,10 @@
 #include "main_component.h"
 
 MainComponent::MainComponent(ftxui::ScreenInteractive *screen)
-    : screen_(screen) {
+    : screen_(screen),
+      process_component_(ftxui::Make<ProcessInfoComponent>(screen)),
+      cpu_component_(ftxui::Make<CpuComponent>()),
+      memory_component_(ftxui::Make<MemoryComponent>()) {
   Add(cpu_component_);
   Add(process_component_);
   Add(memory_component_);
@@ -21,7 +24,7 @@ ftxui::Element MainComponent::Render() {
       separatorEmpty(),
       memory_component_->Render(),
       separatorEmpty(),
-      process_component_->Render(),
+      process_component_->Render()| flex,
   });
 }
 
