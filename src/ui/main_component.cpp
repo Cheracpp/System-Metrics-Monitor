@@ -29,6 +29,15 @@ ftxui::Element MainComponent::Render() {
 }
 
 bool MainComponent::OnEvent(ftxui::Event event) {
+  if (event.is_mouse()) {
+    if (event.mouse().motion == ftxui::Mouse::Pressed) {
+      return ComponentBase::OnEvent(event);
+    }
+    return true;
+  }
+  if (event.is_cursor_reporting()) {
+    return true;
+  }
   if (event == ftxui::Event::Character('q')) {
     screen_->Exit();
     return true;
